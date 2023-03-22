@@ -15,6 +15,10 @@ import { Arr } from 'src/app/model';
  *
  */
 import * as $ from 'jquery';
+interface Lan {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-oa',
@@ -22,6 +26,13 @@ import * as $ from 'jquery';
   styleUrls: ['./oa.component.css']
 })
 export class OAComponent {
+  lan: Lan[] = [
+    {value: 'Java', viewValue: 'Java'},
+    {value: 'JavaScript', viewValue: 'JavaScript'},
+    {value: 'C#', viewValue: 'C#'},
+  ];
+  language: string;
+
   table_generated=false;
   firstScreen:boolean=true;
   secondScreen:boolean=false;
@@ -329,15 +340,10 @@ submit(){
        s+="\n";
        console.log("x:")
        console.log(s)
- 
                }
- 
-     
            }
     break;
    }
- 
-   
    }
   }
   else{
@@ -409,7 +415,8 @@ submit(){
 step(){
   this.http
     .post('http://127.0.0.1:8000/stepdefination',{
-      file_data:this.file_content
+      file_data:this.file_content,
+      lang:this.language
     }).subscribe()
 
 }

@@ -15,14 +15,62 @@ import certifi
 
 from django.views.decorators.csrf import csrf_exempt
 
-def func_generator(keyword,argument,result_file,func1):
-    
+def func_generator_js(keyword,argument,result_file,func1):
     structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+ func1 +'\n'+'})'+'\n'
     if 'logout' in argument.split(" ") and keyword=="And":
         structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+'ApplicationExit()'+'\n'+'})'+'\n'
     result_file.write(structure)
 
-def func_generator_with_variable(keyword,line,result_file,func1):
+def func_generator_java(keyword,argument,result_file):
+    structure='@'+keyword+'(\"^'+argument.strip()+'$\")\n\t'+'public void '+argument.replace(" ", "_")[1:]+'() {\n\n\t}\n\n\t'
+    result_file.write(structure)
+
+def func_generator_cs(keyword,argument,result_file):
+    structure='['+keyword+'(@\"'+argument.strip()+'\")]\n\t\t'+'public void '+keyword+argument.replace(" ", "")+'() \n\t\t{\n\n\t\t}\n\n\t'
+    result_file.write(structure)
+
+def func_generator_with_variable_cs(keyword,line,result_file):
+    preced_place_holder=""
+    variable_string="("
+    removing_word_list=[]
+    removing_word_list.append(keyword)
+    removing_word_list.append(',')
+    for data in re.findall("<[a-z_0-9]*>", line):
+        preced_place_holder=preced_place_holder+"\"\"([^\"\"]*)\"\","
+        #print(preced_place_holder)
+        variable_string=variable_string+'String '+data[1:-1]+','
+        temp="\"<"+data[1:-1]+">\""
+        removing_word_list.append(temp)
+    preced_place_holder=preced_place_holder[:-1]
+    variable_string=variable_string[:-1]+')'
+    for rem in removing_word_list:
+        if rem in line:
+            #print("rem:"+rem)
+            line=line.replace(rem,"")
+    structure='['+keyword+'(@\"'+line.strip()+preced_place_holder+'\")]\n\t\t'+'public void '+keyword+line.replace(" ", "")+variable_string+' \n\t\t{\n\n\t\t}\n\n\t'
+    result_file.write(structure)
+
+def func_generator_with_variable_java(keyword,line,result_file):
+    preced_place_holder=""
+    variable_string="("
+    removing_word_list=[]
+    removing_word_list.append(keyword)
+    removing_word_list.append(',')
+    for data in re.findall("<[a-z_0-9]*>", line):
+        preced_place_holder=preced_place_holder+"(.*)"
+        #print(preced_place_holder)
+        variable_string=variable_string+'String '+data[1:-1]+','
+        temp="\"<"+data[1:-1]+">\""
+        removing_word_list.append(temp)
+    variable_string=variable_string[:-1]+')'
+    for rem in removing_word_list:
+        if rem in line:
+            #print("rem:"+rem)
+            line=line.replace(rem,"")
+    structure='@'+keyword+'(\"^'+line.strip()+preced_place_holder+'$\")\n\t'+'public void '+line.replace(" ", "_")[1:-1]+variable_string+' {\n\n\t}\n\t\n\t'
+    result_file.write(structure)
+
+def func_generator_with_variable_js(keyword,line,result_file,func1):
     variable_string="("
     removing_word_list=[]
     removing_word_list.append(keyword)
@@ -30,17 +78,18 @@ def func_generator_with_variable(keyword,line,result_file,func1):
     preced_place_holder=""
     for data in re.findall("<[a-z_0-9]*>", line):
         preced_place_holder=preced_place_holder+"{"+"string"+"},"
-        print(preced_place_holder)
+        #print(preced_place_holder)
         variable_string=variable_string+data[1:-1]+','
         temp="\"<"+data[1:-1]+">\""
         removing_word_list.append(temp)
+    #print(removing_word_list)
     preced_place_holder=preced_place_holder[:-1]
     variable_string=variable_string[:-1]+')'
     for rem in removing_word_list:
         if rem in line:
-            print("rem:"+rem)
+            #print("rem:"+rem)
             line=line.replace(rem,"")
-    print("precedence:"+preced_place_holder)
+    #print("precedence:"+preced_place_holder)
     structure=keyword+'(\''+line.strip()+preced_place_holder+'\','+variable_string+'=>{'+'\n'+func1+variable_string+'\n'+'})'+'\n'
     result_file.write(structure)
 
@@ -134,28 +183,79 @@ def bdd(request):
 def step_def(request):
     file=json.loads(request.body.decode('utf-8'))
     content=file['file_data']
-    
+    language=file['lang']
     content=content[:content.find("Examples:")]
-
     to_iter=content.split("\n")[2:]
-    result_file=open('BddScenario.js','w')
-    for line in to_iter: 
-        if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0 :
-            func1="ApplicationLaunch()"
-            func_generator("Given",line[len("Given"):],result_file,func1)
-        elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
-            
-            func_generator("And",line[len("And"):],result_file,func1='')
-        elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
-            func1="ApplicationLogin()"
-            func_generator("When",line[len("When"):],result_file,func1)
-        elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-            
-            func1="userDefinedFunction"
-            func_generator_with_variable("And",line,result_file,func1)
-        elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-            func_generator_with_variable("Given",line,result_file,func1='')
-        elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-            func_generator_with_variable("When",line,result_file,func1='')
-    result_file.close()
-    return HttpResponse("ok")
+    
+    if language=='JavaScript':
+        result_file=open('BddScenario.js','w')
+        for line in to_iter: 
+            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0 :
+                func1="ApplicationLaunch()"
+                func_generator_js("Given",line[len("Given"):],result_file,func1)
+
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_js("And",line[len("And"):],result_file,func1='')
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func1="ApplicationLogin()"
+                func_generator_js("When",line[len("When"):],result_file,func1)
+
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func1="userDefinedFunction"
+                func_generator_with_variable_js("And",line,result_file,func1)
+
+            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_js("Given",line,result_file,func1='')
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_js("When",line,result_file,func1='')
+        result_file.close()
+    
+    elif language=='Java':
+        result_file=open('BddScenario.java','w')
+        result_file.write('public class seatbooking  {'+'\n'+'\n'+'\t')
+        for line in to_iter: 
+            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_java("Given",line[len("Given"):],result_file)
+        
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_java("And",line[len("And"):],result_file)
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_java("When",line[len("When"):],result_file)
+        
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_java("And",line,result_file)
+        
+            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_java("Given",line,result_file)
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_java("When",line,result_file)
+        result_file.write('}')
+
+    elif language=='C#':
+        result_file=open('BddScenario.cs','w')
+        result_file.write('namespace TestingPractice.ProjectName.TA.Steps\n{\n\t[Binding]\n\tpublic sealed class BDDScenarios : TestSteps\n\t{\n\t\t')
+        for line in to_iter: 
+            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_cs("Given",line[len("Given"):],result_file)
+
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_cs("And",line[len("And"):],result_file)
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                func_generator_cs("When",line[len("When"):],result_file)
+
+            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_cs("And",line,result_file)        
+
+            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_java("Given",line,result_file)
+
+            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+                func_generator_with_variable_java("When",line,result_file)
+        result_file.write('}\n}')
+        return HttpResponse("ok")
+        

@@ -4,24 +4,17 @@ Given I launch SeatBooking Application URL
 When I Login to SeatBooking Application
 And I land to SeatBooking Application Home Page
 And I Click on button Make Reservation
-And Funrnish the information "<building>","<floor>","<seatnumber>"
+And Funrnish the information "<mod>","<sto>","<pro>","<ram>"
 And Clicks on button Make Reservation button and verify the message
 And I logout from WebGantt application
 Examples:
-|building|floor|seatnumber|
-|Bangalore Global Village Site|1st Floor|06-N-01|
-|Bangalore Global Village Site|2nd Floor|06-N-02|
-|Bangalore Global Village Site|3rd Floor|06-N-03|
-|Bangalore Global Village Site|4th Floor|06-N-04|
-|Chandigarh Landmark Plaza|1st Floor|06-N-02|
-|Chandigarh Landmark Plaza|2nd Floor|06-N-01|
-|Chandigarh Landmark Plaza|3rd Floor|06-N-04|
-|Chandigarh Landmark Plaza|4th Floor|06-N-03|
-|EON E Cluster 4th Floor|1st Floor|06-N-03|
-|EON E Cluster 4th Floor|2nd Floor|06-N-04|
-|EON E Cluster 4th Floor|3rd Floor|06-N-01|
-|EON E Cluster 4th Floor|4th Floor|06-N-02|
-|EON D Cluster Wing1|1st Floor|06-N-04|
-|EON D Cluster Wing1|2nd Floor|06-N-03|
-|EON D Cluster Wing1|3rd Floor|06-N-02|
-|EON D Cluster Wing1|4th Floor|06-N-01|
+|mod|sto|pro|ram|
+|m1|s1|p1|r1|
+|m1|s2|p3|r2r|
+|m1|s3|p2|r3|
+|m2|s1|p3|r3|
+|m2|s2|p2|r1|
+|m2|s3|p1|r2r|
+|m3|s1|p2|r2r|
+|m3|s2|p1|r3|
+|m3|s3|p3|r1|
