@@ -412,13 +412,22 @@ submit(){
  console.log("map:")
  console.log(this.map_col)
  }
-step(){
+
+
+step(id: string,id2: string){
   this.http
     .post('http://127.0.0.1:8000/stepdefination',{
       file_data:this.file_content,
       lang:this.language
-    }).subscribe()
-
+    }).subscribe((data) => (this.content = data));
+    this.sleep(3000).then(() => {if (this.content) {
+      this.file_content=this.content['file_content']
+      console.log("Bdd Step Definition")
+      console.log(this.file_content)
+      this.modalService.close(id);
+      this.modalService.open(id2);
+     }})
+    
 }
 bdd(id:string){
   let factor_names=[]
@@ -445,7 +454,6 @@ bdd(id:string){
       console.log("file_content")
       console.log(this.file_content)
       this.modalService.open(id);
-    
      }})
 }
 
@@ -497,6 +505,4 @@ console.log(this.radio_list)
  this.modalService.open(id);
   }
 }
-
-
 }

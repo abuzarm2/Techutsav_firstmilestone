@@ -22,7 +22,7 @@ def func_generator_js(keyword,argument,result_file,func1):
     result_file.write(structure)
 
 def func_generator_java(keyword,argument,result_file):
-    structure='@'+keyword+'(\"^'+argument.strip()+'$\")\n\t'+'public void '+argument.replace(" ", "_")[1:]+'() {\n\n\t}\n\n\t'
+    structure='@'+keyword+'(\"^'+argument.strip()+'$\")\n\t'+'public void '+argument.replace(" ", "_")[1:]+'() throws InterruptedException {\n\n\t}\n\n\t'
     result_file.write(structure)
 
 def func_generator_cs(keyword,argument,result_file):
@@ -67,7 +67,7 @@ def func_generator_with_variable_java(keyword,line,result_file):
         if rem in line:
             #print("rem:"+rem)
             line=line.replace(rem,"")
-    structure='@'+keyword+'(\"^'+line.strip()+preced_place_holder+'$\")\n\t'+'public void '+line.replace(" ", "_")[1:-1]+variable_string+' {\n\n\t}\n\t\n\t'
+    structure='@'+keyword+'(\"^'+line.strip()+preced_place_holder+'$\")\n\t'+'public void '+line.replace(" ", "_")[1:-1]+variable_string+' throws InterruptedException {\n\n\t}\n\t\n\t'
     result_file.write(structure)
 
 def func_generator_with_variable_js(keyword,line,result_file,func1):
@@ -146,8 +146,8 @@ def bdd(request):
         table_data=data['table_data']
         factor_name=data['column_data']
         
-        file=open('BddScenario.feature','w')
-        scenerio="@"+data['tag']+'\n'+"Scenario Outline:"
+        file=open('features\BddScenario.feature','w')
+        scenerio="@"+data['tag']+"\nFeature:Low code App\nScenario Outline:"
         scenerio+=data['scenerio']
         scenerio=scenerio+'\n'
 
@@ -188,7 +188,7 @@ def step_def(request):
     to_iter=content.split("\n")[2:]
     
     if language=='JavaScript':
-        result_file=open('BddScenario.js','w')
+        result_file=open('stepdefinition\BddScenario.js','w')
         for line in to_iter: 
             if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0 :
                 func1="ApplicationLaunch()"
@@ -210,10 +210,10 @@ def step_def(request):
 
             elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
                 func_generator_with_variable_js("When",line,result_file,func1='')
-        result_file.close()
-    
+        result_file=open('stepdefinition\BddScenario.js','r')
+        
     elif language=='Java':
-        result_file=open('BddScenario.java','w')
+        result_file=open('stepdefinition\BddScenario.java','w')
         result_file.write('public class seatbooking  {'+'\n'+'\n'+'\t')
         for line in to_iter: 
             if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
@@ -234,9 +234,10 @@ def step_def(request):
             elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
                 func_generator_with_variable_java("When",line,result_file)
         result_file.write('}')
+        result_file=open('stepdefinition\BddScenario.java','r')
 
     elif language=='C#':
-        result_file=open('BddScenario.cs','w')
+        result_file=open('stepdefinition\BddScenario.cs','w')
         result_file.write('namespace TestingPractice.ProjectName.TA.Steps\n{\n\t[Binding]\n\tpublic sealed class BDDScenarios : TestSteps\n\t{\n\t\t')
         for line in to_iter: 
             if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
@@ -257,5 +258,6 @@ def step_def(request):
             elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
                 func_generator_with_variable_java("When",line,result_file)
         result_file.write('}\n}')
-        return HttpResponse("ok")
+        result_file=open('stepdefinition\BddScenario.cs','r')
+    return HttpResponse(json.dumps({"file_content":result_file.read()}))
         

@@ -1,20 +1,22 @@
 @dev
-Scenario Outline:seatbooking
+Feature:Low code App
+Scenario Outline:SeatBooking
 Given I launch SeatBooking Application URL
 When I Login to SeatBooking Application
 And I land to SeatBooking Application Home Page
 And I Click on button Make Reservation
-And Funrnish the information "<mod>","<sto>","<pro>","<ram>"
+
+And Funrnish the information "<Model>","<Storage>","<Ram>","<Processor>"
 And Clicks on button Make Reservation button and verify the message
 And I logout from WebGantt application
 Examples:
-|mod|sto|pro|ram|
-|m1|s1|p1|r1|
-|m1|s2|p3|r2r|
-|m1|s3|p2|r3|
-|m2|s1|p3|r3|
-|m2|s2|p2|r1|
-|m2|s3|p1|r2r|
-|m3|s1|p2|r2r|
-|m3|s2|p1|r3|
-|m3|s3|p3|r1|
+|Model|Storage|Ram|Processor|
+|M1|S1|R1|P1|
+|M1|S2|R3|P2|
+|M1|S3|R2|P3|
+|M2|S1|R3|P3|
+|M2|S2|R2|P1|
+|M2|S3|R1|P2|
+|M3|S1|R2|P2|
+|M3|S2|R1|P3|
+|M3|S3|R3|P1|

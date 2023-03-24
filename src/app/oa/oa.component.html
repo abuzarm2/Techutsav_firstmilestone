@@ -94,19 +94,15 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div> <!--third-->
-
-  
-  
-
   </div> <!--screen-->
+
 <jw-modal  id="custom-modal-1">
   <h1>Choose the best option:</h1>
-  <div *ngFor="let enum of radio_list">re
+  <div *ngFor="let enum of radio_list">
 
       <input  [value]='enum' type="radio" name="enums" [(ngModel)]="SelectedItem">
       {{enum}}
-    
-      
+
   </div>
   <button (click)="closeModal('custom-modal-1');">Close</button>
   <button (click)="submit();">Submit</button>  
@@ -118,19 +114,22 @@
 
   <h4>Select langauge</h4>
   <mat-form-field appearance="fill">
-    
-    <select matNativeControl [(ngModel)]="language" name="car">
-      <option value="" selected></option>
+    <select matNativeControl [(ngModel)]="language" name="language">
+      <option value="Select" selected></option>
       <option *ngFor="let lang of lan" [value]="lang.value">
         {{lang.viewValue}}
       </option>
     </select>
   </mat-form-field>
-
+  
   <p> Selected language: {{language}} </p>
-  <button (click)="step();">Generate StepDefination</button>
+  <button (click)="step('custom2','custom3');">Generate StepDefination</button>
   </div>
 </jw-modal>
 
-
+<jw-modal id="custom3">
+  <div style="white-space: pre-wrap;">
+  {{file_content}}
+  </div>
+</jw-modal>
   
