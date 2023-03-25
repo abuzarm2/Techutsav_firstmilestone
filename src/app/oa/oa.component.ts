@@ -36,6 +36,8 @@ export class OAComponent {
   table_generated=false;
   firstScreen:boolean=true;
   secondScreen:boolean=false;
+  thirdScreen:boolean=false;
+
   map_col={}
   arr: Arr = { Factors: '0', Levels: '0' };
   addForm: FormGroup;
@@ -126,9 +128,6 @@ export class OAComponent {
     }
   }
   refresh(){
-   
-   
-    
     for(let index=0;index<Number(this.Factors);index++){
       this.rows[index].Factor_name=this.previous_state[index].Factor_name
       this.rows[index].Level_count=this.previous_state[index].Level_count
@@ -151,6 +150,7 @@ export class OAComponent {
     $('.inputId').prop('readonly', true);
     this.flagrefresh=false
   }
+
   /**used to create element of form array*/
   emptylist(){
     if(this.flagnext==true){
@@ -195,7 +195,7 @@ export class OAComponent {
       console.log("data:")
       console.log(this.data)
       console.log("row value:")
-    console.log(this.rows)
+      console.log(this.rows)
       this.flagoa=false
       this.flagnext=true
       
@@ -241,11 +241,10 @@ export class OAComponent {
     this.one_time_flag=true
     }
     
-  
-  console.log(this.rows)
-  this.id=id
-  let count = {};
-  for (let index = 0; index < this.rows.length; index++) {
+    console.log(this.rows)
+    this.id=id
+    let count = {};
+    for (let index = 0; index < this.rows.length; index++) {
     let s = this.rows[index]['Level_values'].split(',').length;
     if (s in count) {
       let temp = count[s];
@@ -254,33 +253,33 @@ export class OAComponent {
     } else {
       count[s] = 1;
     }
-  }
-  console.log('count dic is :');
-  console.log(count);
-  let str = '';
-  for (let key in count) {
+    }
+    console.log('count dic is :');
+    console.log(count);
+    let str = '';
+    for (let key in count) {
     str += key;
     str = str + '^' + String(count[key]);
     str += ' ';
-  }
-  str = str.slice(0, str.length - 1);
+    }
+    str = str.slice(0, str.length - 1);
 
-  for (let index = 0; index < this.rows.length; index++) {
+    for (let index = 0; index < this.rows.length; index++) {
    let temp=this.rows[index].Factor_name
    this.onscreen.push(temp)
    this.map_col[this.displayedColumns[index]]=this.onscreen[index]
-  }
-  console.log("onscreen:"+this.map_col)
-  this.http
+    }
+    console.log("onscreen:"+this.map_col)
+    this.http
     .post('http://127.0.0.1:8000/', {
       pattern: str,
     })
     .subscribe((data) => (this.obj = data));
-  console.log(this.obj);
-this.sleep(5000).then(() => {if (this.obj) {
-  if(this.obj.result[0]==false)
-     {
-   this.fetched_list=this.obj.result[1]
+    console.log(this.obj);
+    this.sleep(5000).then(() => {if (this.obj) {
+      if(this.obj.result[0]==false)
+      {
+    this.fetched_list=this.obj.result[1]
   
 
    for (let index=0;index<=2;index++)
@@ -289,19 +288,19 @@ this.sleep(5000).then(() => {if (this.obj) {
        }
        this.modalService.open(this.id);
        }
- else{
-   this.submit()
+    else{
+    this.submit()
    }
 
- }})
- 
- 
-}
-closeModal(id: string) {
-  this.modalService.close(id);
-}
+     }})
 
-submit(){
+  }
+
+  closeModal(id: string) {
+  this.modalService.close(id);
+  }
+
+  submit(){
   
   let s='';
   console.log("selectedItem:")
@@ -411,7 +410,7 @@ submit(){
  console.log(this.displayedColumns)
  console.log("map:")
  console.log(this.map_col)
- }
+}
 
 
 step(id: string,id2: string){
@@ -429,7 +428,13 @@ step(id: string,id2: string){
      }})
     
 }
-bdd(id:string){
+
+bdd(){
+  this.secondScreen=false;
+  this.thirdScreen=true;
+}
+
+generate_feature(id: string){
   let factor_names=[]
   let temp=[]
   for (let index = 0; index < this.displayedColumns.length; index++){
@@ -455,6 +460,7 @@ bdd(id:string){
       console.log(this.file_content)
       this.modalService.open(id);
      }})
+     
 }
 
 generate(id:string) {

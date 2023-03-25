@@ -20,11 +20,11 @@ public class seatbooking  {
 
 	}
 
-	@And("^Funrnish the information "<Model>","<Storage>","<Ram>","<Processor>"$")
-	public void Funrnish_the_information_"<Model>","<Storage>","<Ram>","<Processor>"() throws InterruptedException {
+	@And("^Funrnish the information(.*)(.*)(.*)(.*)$")
+	public void Funrnish_the_information(String mod,String sto,String ram,String pro) throws InterruptedException {
 
 	}
-
+	
 	@And("^Clicks on button Make Reservation button and verify the message$")
 	public void Clicks_on_button_Make_Reservation_button_and_verify_the_message() throws InterruptedException {
 
