@@ -43,6 +43,8 @@ export class OAComponent {
   addForm: FormGroup;
   displayedColumns=[]
   rows=[];
+  rows1 = [];
+  rows2 = [];
   flag=false;
   flagoa=false;
   flagnext=true;
@@ -74,6 +76,29 @@ export class OAComponent {
     this.initialise_back_to_home();
 
   }
+  onAddRow() {
+    this.rows1.push({
+      pre: '',
+      pre_variables: '',
+      pre_values: '',
+    });
+  }
+  onAddRow2() {
+    this.rows2.push({
+      post: '',
+      post_variables: '',
+      post_values: '',
+    });
+  }
+
+  onRemoveRow() {
+    this.rows1.pop();
+  }
+  onRemoveRow2() {
+    this.rows2.pop();
+  }
+
+
 
   initialise_back_to_home(){
     
@@ -83,6 +108,8 @@ export class OAComponent {
     this.map_col={}
     this.displayedColumns=[]
     this.rows=[]
+    this.rows1 = [];
+    this.rows2 = [];
     this.flagoa=false
     this.flagnext=true
     this.id=''
@@ -432,6 +459,8 @@ step(id: string,id2: string){
 bdd(){
   this.secondScreen=false;
   this.thirdScreen=true;
+  this.onAddRow();
+  this.onAddRow2();
 }
 
 generate_feature(id: string){
@@ -447,8 +476,8 @@ generate_feature(id: string){
     .post('http://127.0.0.1:8000/bdd', {
       table_data: this.data,
       column_data:factor_names,
-      pre: this.Pre_Requisite,
-      post: this.Post_Requisite,
+      pre_req: this.rows1,
+      post_req: this.rows2,
       scenerio:this.Scenerio,
       tag:this.tag
 

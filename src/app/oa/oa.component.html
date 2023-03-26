@@ -98,21 +98,87 @@
 <div class="section2" *ngIf="thirdScreen==true">
 
   
-    <p><label>Pre-Requisite</label></p>
-    <textarea style="overflow:auto;" [(ngModel)]="Pre_Requisite" name="pre-requisite" id="pre" cols="30" rows="10"></textarea>
-    <p><label>Post-Requisite</label></p>
-    <textarea style="overflow:auto;" [(ngModel)]="Post_Requisite" name="pre-requisite" id="pre" cols="30" rows="5"></textarea>
-  
+  <table class="table1">
+    <tbody>
+      <tr class="titles" style="font-size: 15px">
+        <th>Pre-requisite</th><th>Variables</th><th>Values</th>
+      </tr>
+      <tr *ngFor="let row of rows1; let index = index">
+        <td>
+          <input style="width: 500px; text-align: left;" [(ngModel)]="row.pre" #name="ngModel" value="row.pre" />
+        </td>
+        <td>
+          <input
+            
+            [(ngModel)]="row.pre_variables"
+            #name="ngModel"
+            value="row.pre_variables"
+          />
+        </td>
+        <td>
+          <input
+            [(ngModel)]="row.pre_values"
+            #name="ngModel"
+            value="row.pre_values"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="buttons_container">
+    <button class="button button2" (click)="onRemoveRow()">Remove</button>
+    <button class="button button2" (click)="onAddRow()">add row</button>
+  </div>
+  <table class="table1">
+    <tbody>
+      <tr class="titles" style="font-size: 15px">
+        <th>Post-requisite</th>
+        <th>Variables2</th>
+        <th>Values2</th>
+      </tr>
+      <tr *ngFor="let row of rows2; let index = index">
+        <td>
+          <input style="width: 500px; text-align: left;" [(ngModel)]="row.post" #name="ngModel" value="row.post" />
+        </td>
+        <td>
+          <input
+            
+            [(ngModel)]="row.post_variables"
+            #name="ngModel"
+            value="row.post_variables"
+          />
+        </td>
+        <td>
+          <input
+            [(ngModel)]="row.post_values"
+            #name="ngModel"
+            value="row.post_values"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  
-    <p style="height :45px; width:280.63px"></p>
-    <p><label>Tag</label></p>
-    <input type="text" style="width:150px"  [(ngModel)]="tag">
-    <p><label>Scenario Description</label></p>
-    <textarea style="overflow:auto;" [(ngModel)]="Scenerio" name="pre-requisite" id="pre" cols="30" rows="5"></textarea>
-  
-    <button  class="button button2" (click)="generate_feature('custom2');">Generate Feature file</button>
+  <div class="buttons_container">
+    <button class="button button2" (click)="onRemoveRow2()">Remove</button>
+    <button class="button button2" (click)="onAddRow2()">add row</button>
+  </div>
 
+  <p><label>Tag</label></p>
+  <input type="text" style="width: 150px" [(ngModel)]="tag" />
+  <p><label>Scenario Description</label></p>
+  <textarea
+    style="overflow: auto"
+    [(ngModel)]="Scenerio"
+    name="pre-requisite"
+    id="pre"
+    cols="30"
+    rows="5"
+  ></textarea>
+
+  <button class="button button2" (click)="generate_feature('custom2')">
+    Generate Feature File
+  </button>
     <jw-modal id="custom2">
       <div style="white-space: pre-wrap;">
         {{file_content}}

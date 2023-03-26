@@ -15,10 +15,15 @@ import certifi
 
 from django.views.decorators.csrf import csrf_exempt
 
-def func_generator_js(keyword,argument,result_file,func1):
-    structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+ func1 +'\n'+'})'+'\n'
+def func_generator_js(keyword,argument,result_file):
+    func1=''
+    if 'launch' in argument.split(" ") and keyword=="And":
+        func1='ApplicationLaunch()'
     if 'logout' in argument.split(" ") and keyword=="And":
-        structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+'ApplicationExit()'+'\n'+'})'+'\n'
+        func1='ApplicationExit()'
+    if 'login' in argument.split(" ") and keyword=="And":
+        func1='ApplicationLogin()'
+    structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+ func1 +'\n'+'})'+'\n'
     result_file.write(structure)
 
 def func_generator_java(keyword,argument,result_file):
@@ -90,7 +95,7 @@ def func_generator_with_variable_js(keyword,line,result_file,func1):
             #print("rem:"+rem)
             line=line.replace(rem,"")
     #print("precedence:"+preced_place_holder)
-    structure=keyword+'(\''+line.strip()+preced_place_holder+'\','+variable_string+'=>{'+'\n'+func1+variable_string+'\n'+'})'+'\n'
+    structure=keyword+'(\''+line.strip()+' '+preced_place_holder+'\','+variable_string+'=>{'+'\n'+func1+variable_string+'\n'+'})'+'\n'
     result_file.write(structure)
 
 # Create your views here.
@@ -142,6 +147,8 @@ def data_operation(request):
 @csrf_exempt
 def bdd(request):
     if request.method=='POST':
+        values=[]
+        variables=[]
         data=json.loads(request.body.decode('utf-8'))
         table_data=data['table_data']
         factor_name=data['column_data']
@@ -151,30 +158,71 @@ def bdd(request):
         scenerio+=data['scenerio']
         scenerio=scenerio+'\n'
 
-        string1=data['pre']
-        string1=string1+'\n'
+        string1=''
+        string_variables=''
+        string_values=''
+        for dat in data['pre_req']:
+            string1+=dat['pre']+' '
+            if(dat['pre_variables']!=''):
+                string_variables=dat['pre_variables'].split(',')
+                string_values=(dat['pre_values']).split(',')
+                for i in string_variables:
+                    string1+='\"<'+i+'>\",'
+                    variables.append(i)
+                for j in string_values:
+                    values.append(j)
+                string1=string1[:-1]
+            string1+='\n'
+        string1+='\n'
+
         string2="""And Funrnish the information """
-        
         for factor in factor_name:
             string2+="\"<"
             string2+=factor
             string2+=">\","
         string2=string2[:-1]
-        string2=string2+'\n'
-        string3=data['post']
+        string2=string2+'\n\n'
+
+        string3=''
+        string_variables=''
+        string_values=''
+        for dat in data['post_req']:
+            string3+=dat['post']+' '
+            if(dat['post_variables']!=''):
+                string_variables=dat['post_variables'].split(',')
+                string_values=(dat['post_values']).split(',')
+                for i in string_variables:
+                    string3+='\"<'+i+'>\",'
+                    variables.append(i)
+                for j in string_values:
+                    values.append(j)
+                string3=string3[:-1]
+            string3+='\n'
+        print(string3)
+        string3+='\n'
+
+
         string3=string3+'\n'+'Examples:'+'\n'
         for i in factor_name:
             string3+='|'
             string3+=i
+        for i in variables:
+            string3+='|'
+            string3+=i
         string3+='|'
         string3+='\n'
+
+        
         for line in table_data:
-            
             for i in line:
                 string3+='|'
                 string3+=line[i]
+            for j in values:
+                string3+='|'
+                string3+=j  
             string3+='|'
             string3+='\n'
+            
         result=scenerio+string1+string2+string3
         file.write(result)
     return HttpResponse(json.dumps({"file_content":result}))
@@ -190,26 +238,26 @@ def step_def(request):
     if language=='JavaScript':
         result_file=open('stepdefinition\BddScenario.js','w')
         for line in to_iter: 
-            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0 :
-                func1="ApplicationLaunch()"
-                func_generator_js("Given",line[len("Given"):],result_file,func1)
+            if "Given" in line and len(re.findall("<[A-Z|a-z_0-9]*>", line))==0 :
+                func_generator_js("Given",line[len("Given"):],result_file)
 
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
-                func_generator_js("And",line[len("And"):],result_file,func1='')
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
+                func_generator_js("And",line[len("And"):],result_file)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
-                func1="ApplicationLogin()"
-                func_generator_js("When",line[len("When"):],result_file,func1)
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
+                func_generator_js("When",line[len("When"):],result_file)
 
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
                 func1="userDefinedFunction"
                 func_generator_with_variable_js("And",line,result_file,func1)
 
-            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-                func_generator_with_variable_js("Given",line,result_file,func1='')
+            elif "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
+                func1='ApplicationLaunch'
+                func_generator_with_variable_js("Given",line,result_file,func1)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-                func_generator_with_variable_js("When",line,result_file,func1='')
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
+                func1='ApplicationLogin'
+                func_generator_with_variable_js("When",line,result_file,func1)
         result_file=open('stepdefinition\BddScenario.js','r')
         
     elif language=='Java':

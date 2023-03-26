@@ -3,14 +3,14 @@ namespace TestingPractice.ProjectName.TA.Steps
 	[Binding]
 	public sealed class BDDScenarios : TestSteps
 	{
-		[Given(@"I launch SeatBooking Application URL")]
-		public void GivenIlaunchSeatBookingApplicationURL() 
+		[Given(@"I launch SeatBooking Application "<URL>"")]
+		public void GivenIlaunchSeatBookingApplicationURL"<URL>"() 
 		{
 
 		}
 
-	[When(@"I Login to SeatBooking Application")]
-		public void WhenILogintoSeatBookingApplication() 
+	[When(@"I Login to SeatBooking Application "<Uname>","<Password>"")]
+		public void WhenILogintoSeatBookingApplication"<Uname>","<Password>"() 
 		{
 
 		}
