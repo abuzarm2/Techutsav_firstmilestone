@@ -17,21 +17,21 @@ from django.views.decorators.csrf import csrf_exempt
 
 def func_generator_js(keyword,argument,result_file):
     func1=''
-    if 'launch' in argument.split(" ") and keyword=="And":
+    if 'launch' in argument.split(" ") and keyword=="Given":
         func1='ApplicationLaunch()'
     if 'logout' in argument.split(" ") and keyword=="And":
         func1='ApplicationExit()'
-    if 'login' in argument.split(" ") and keyword=="And":
+    if 'login' in argument.split(" ") and keyword=="When":
         func1='ApplicationLogin()'
     structure=keyword+'(\''+argument.strip()+'\',()=>{'+'\n'+ func1 +'\n'+'})'+'\n'
     result_file.write(structure)
 
 def func_generator_java(keyword,argument,result_file):
-    structure='@'+keyword+'(\"^'+argument.strip()+'$\")\n\t'+'public void '+argument.replace(" ", "_")[1:]+'() throws InterruptedException {\n\n\t}\n\n\t'
+    structure='@'+keyword+'(\"^'+argument.strip()+'$\")\n\t'+'public void '+argument.replace(" ", "_")[1:-1]+'() throws InterruptedException {\n\n\t}\n\n\t'
     result_file.write(structure)
 
 def func_generator_cs(keyword,argument,result_file):
-    structure='['+keyword+'(@\"'+argument.strip()+'\")]\n\t\t'+'public void '+keyword+argument.replace(" ", "")+'() \n\t\t{\n\n\t\t}\n\n\t'
+    structure='['+keyword+'(@\"'+argument.strip()+'\")]\n\t\t'+'public void '+keyword+argument.replace(" ", "")+'() \n\t\t{\n\n\t\t}\n\n\t\t'
     result_file.write(structure)
 
 def func_generator_with_variable_cs(keyword,line,result_file):
@@ -40,7 +40,7 @@ def func_generator_with_variable_cs(keyword,line,result_file):
     removing_word_list=[]
     removing_word_list.append(keyword)
     removing_word_list.append(',')
-    for data in re.findall("<[a-z_0-9]*>", line):
+    for data in re.findall("<[A-Za-z_0-9]*>", line):
         preced_place_holder=preced_place_holder+"\"\"([^\"\"]*)\"\","
         #print(preced_place_holder)
         variable_string=variable_string+'String '+data[1:-1]+','
@@ -52,7 +52,7 @@ def func_generator_with_variable_cs(keyword,line,result_file):
         if rem in line:
             #print("rem:"+rem)
             line=line.replace(rem,"")
-    structure='['+keyword+'(@\"'+line.strip()+preced_place_holder+'\")]\n\t\t'+'public void '+keyword+line.replace(" ", "")+variable_string+' \n\t\t{\n\n\t\t}\n\n\t'
+    structure='['+keyword+'(@\"'+line.strip()+preced_place_holder+'\")]\n\t\t'+'public void '+keyword+line.replace(" ", "")+variable_string+' \n\t\t{\n\n\t\t}\n\n\t\t'
     result_file.write(structure)
 
 def func_generator_with_variable_java(keyword,line,result_file):
@@ -61,7 +61,7 @@ def func_generator_with_variable_java(keyword,line,result_file):
     removing_word_list=[]
     removing_word_list.append(keyword)
     removing_word_list.append(',')
-    for data in re.findall("<[a-z_0-9]*>", line):
+    for data in re.findall("<[A-Za-z_0-9]*>", line):
         preced_place_holder=preced_place_holder+"(.*)"
         #print(preced_place_holder)
         variable_string=variable_string+'String '+data[1:-1]+','
@@ -81,7 +81,7 @@ def func_generator_with_variable_js(keyword,line,result_file,func1):
     removing_word_list.append(keyword)
     removing_word_list.append(',')
     preced_place_holder=""
-    for data in re.findall("<[a-z_0-9]*>", line):
+    for data in re.findall("<[A-Za-z_0-9]*>", line):
         preced_place_holder=preced_place_holder+"{"+"string"+"},"
         #print(preced_place_holder)
         variable_string=variable_string+data[1:-1]+','
@@ -235,10 +235,13 @@ def step_def(request):
     content=content[:content.find("Examples:")]
     to_iter=content.split("\n")[2:]
     
+    
     if language=='JavaScript':
         result_file=open('stepdefinition\BddScenario.js','w')
         for line in to_iter: 
-            if "Given" in line and len(re.findall("<[A-Z|a-z_0-9]*>", line))==0 :
+            if "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0 :
+                print('Given' in line)
+                print(len(re.findall("<[A-Za-z_0-9]*>", line)))
                 func_generator_js("Given",line[len("Given"):],result_file)
 
             elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
@@ -264,22 +267,22 @@ def step_def(request):
         result_file=open('stepdefinition\BddScenario.java','w')
         result_file.write('public class seatbooking  {'+'\n'+'\n'+'\t')
         for line in to_iter: 
-            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+            if "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
                 func_generator_java("Given",line[len("Given"):],result_file)
         
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
                 func_generator_java("And",line[len("And"):],result_file)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
                 func_generator_java("When",line[len("When"):],result_file)
         
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
                 func_generator_with_variable_java("And",line,result_file)
         
-            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+            elif "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
                 func_generator_with_variable_java("Given",line,result_file)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
                 func_generator_with_variable_java("When",line,result_file)
         result_file.write('}')
         result_file=open('stepdefinition\BddScenario.java','r')
@@ -288,23 +291,24 @@ def step_def(request):
         result_file=open('stepdefinition\BddScenario.cs','w')
         result_file.write('namespace TestingPractice.ProjectName.TA.Steps\n{\n\t[Binding]\n\tpublic sealed class BDDScenarios : TestSteps\n\t{\n\t\t')
         for line in to_iter: 
-            if "Given" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+            if "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
+               
                 func_generator_cs("Given",line[len("Given"):],result_file)
-
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+                
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
                 func_generator_cs("And",line[len("And"):],result_file)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))==0:
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))==0:
                 func_generator_cs("When",line[len("When"):],result_file)
 
-            elif "And" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
+            elif "And" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
                 func_generator_with_variable_cs("And",line,result_file)        
 
-            elif "Given" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-                func_generator_with_variable_java("Given",line,result_file)
+            elif "Given" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
+                func_generator_with_variable_cs("Given",line,result_file)
 
-            elif "When" in line and len(re.findall("<[a-z_0-9]*>", line))!=0:
-                func_generator_with_variable_java("When",line,result_file)
+            elif "When" in line and len(re.findall("<[A-Za-z_0-9]*>", line))!=0:
+                func_generator_with_variable_cs("When",line,result_file)
         result_file.write('}\n}')
         result_file=open('stepdefinition\BddScenario.cs','r')
     return HttpResponse(json.dumps({"file_content":result_file.read()}))

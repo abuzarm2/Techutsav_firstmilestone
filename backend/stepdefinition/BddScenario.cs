@@ -3,47 +3,47 @@ namespace TestingPractice.ProjectName.TA.Steps
 	[Binding]
 	public sealed class BDDScenarios : TestSteps
 	{
-		[Given(@"I launch SeatBooking Application "<URL>"")]
-		public void GivenIlaunchSeatBookingApplicationURL"<URL>"() 
+		[Given(@"I launch Seat Booking Application""([^""]*)""")]
+		public void GivenIlaunchSeatBookingApplication(String URL) 
 		{
 
 		}
 
-	[When(@"I Login to SeatBooking Application "<Uname>","<Password>"")]
-		public void WhenILogintoSeatBookingApplication"<Uname>","<Password>"() 
+		[When(@"I Login to Seat Booking Application""([^""]*)"",""([^""]*)""")]
+		public void WhenILogintoSeatBookingApplication(String Uname,String Password) 
 		{
 
 		}
 
-	[And(@"I land to SeatBooking Application Home Page")]
+		[And(@"I land to SeatBooking Application Home Page")]
 		public void AndIlandtoSeatBookingApplicationHomePage() 
 		{
 
 		}
 
-	[And(@"I Click on button Make Reservation")]
+		[And(@"I Click on button Make Reservation")]
 		public void AndIClickonbuttonMakeReservation() 
 		{
 
 		}
 
-	[And(@"Funrnish the information "<Model>","<Storage>","<Ram>","<Processor>"")]
-		public void AndFunrnishtheinformation"<Model>","<Storage>","<Ram>","<Processor>"() 
+		[And(@"Funrnish the information""([^""]*)"",""([^""]*)"",""([^""]*)"",""([^""]*)""")]
+		public void AndFunrnishtheinformation(String Model,String Storage,String Ram,String Processor) 
 		{
 
 		}
 
-	[And(@"Clicks on button Make Reservation button and verify the message")]
+		[And(@"Clicks on button Make Reservation button and verify the message")]
 		public void AndClicksonbuttonMakeReservationbuttonandverifythemessage() 
 		{
 
 		}
 
-	[And(@"I logout from WebGantt application")]
+		[And(@"I logout from Web Gantt application")]
 		public void AndIlogoutfromWebGanttapplication() 
 		{
 
 		}
 
-	}
+		}
 }
