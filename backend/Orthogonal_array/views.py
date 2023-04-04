@@ -154,7 +154,7 @@ def bdd(request):
         factor_name=data['column_data']
         
         file=open('features\BddScenario.feature','w')
-        scenerio="@"+data['tag']+"\nFeature:Low code App\nScenario Outline:"
+        scenerio="@"+data['tag']+"\nFeature: Automation Website for LowCode App\nScenario Outline: "
         scenerio+=data['scenerio']
         scenerio=scenerio+'\n'
 
@@ -173,15 +173,15 @@ def bdd(request):
                     values.append(j)
                 string1=string1[:-1]
             string1+='\n'
-        string1+='\n'
+        
 
-        string2="""And Funrnish the information """
+        string2="""And I Furnish the details for the appointment """
         for factor in factor_name:
             string2+="\"<"
             string2+=factor
             string2+=">\","
         string2=string2[:-1]
-        string2=string2+'\n\n'
+        string2=string2+'\n'
 
         string3=''
         string_variables=''
@@ -199,10 +199,8 @@ def bdd(request):
                 string3=string3[:-1]
             string3+='\n'
         print(string3)
-        string3+='\n'
 
-
-        string3=string3+'\n'+'Examples:'+'\n'
+        string3=string3+'Examples:'+'\n'
         for i in factor_name:
             string3+='|'
             string3+=i

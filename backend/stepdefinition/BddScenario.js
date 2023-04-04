@@ -1,17 +1,17 @@
-Given('I launch Seat Booking Application {string}',(URL)=>{
-ApplicationLaunch(URL)
+Given('I launch Seat Booking Application',()=>{
+ApplicationLaunch()
 })
-When('I Login to Seat Booking Application {string},{string}',(Uname,Password)=>{
-ApplicationLogin(Uname,Password)
+When('I Login to Seat Booking Application',()=>{
+
 })
-And('I land to SeatBooking Application Home Page',()=>{
+And('I land to Seat Booking Application Home Page',()=>{
 
 })
 And('I Click on button Make Reservation',()=>{
 
 })
-And('Funrnish the information {string},{string},{string},{string}',(Model,Storage,Ram,Processor)=>{
-userDefinedFunction(Model,Storage,Ram,Processor)
+And('I Furnish the details for the appointment {string},{string},{string},{string}',(model,storage,Ram,processor)=>{
+userDefinedFunction(model,storage,Ram,processor)
 })
 And('Clicks on button Make Reservation button and verify the message',()=>{
 

@@ -3,44 +3,62 @@ namespace TestingPractice.ProjectName.TA.Steps
 	[Binding]
 	public sealed class BDDScenarios : TestSteps
 	{
-		[Given(@"I launch Seat Booking Application""([^""]*)""")]
-		public void GivenIlaunchSeatBookingApplication(String URL) 
+		[Given(@"I launch Demo Health Tracking Application URL")]
+		public void GivenIlaunchDemoHealthTrackingApplicationURL() 
 		{
 
 		}
 
-		[When(@"I Login to Seat Booking Application""([^""]*)"",""([^""]*)""")]
-		public void WhenILogintoSeatBookingApplication(String Uname,String Password) 
+		[When(@"I login to the application with the defined credentials")]
+		public void WhenIlogintotheapplicationwiththedefinedcredentials() 
 		{
 
 		}
 
-		[And(@"I land to SeatBooking Application Home Page")]
-		public void AndIlandtoSeatBookingApplicationHomePage() 
+		[And(@"I select the Appointments Tab")]
+		public void AndIselecttheAppointmentsTab() 
 		{
 
 		}
 
-		[And(@"I Click on button Make Reservation")]
-		public void AndIClickonbuttonMakeReservation() 
+		[And(@"I select the Add Appointment option")]
+		public void AndIselecttheAddAppointmentoption() 
 		{
 
 		}
 
-		[And(@"Funrnish the information""([^""]*)"",""([^""]*)"",""([^""]*)"",""([^""]*)""")]
-		public void AndFunrnishtheinformation(String Model,String Storage,String Ram,String Processor) 
+		[And(@"I Furnish the details for the appointment""([^""]*)"",""([^""]*)"",""([^""]*)"",""([^""]*)""")]
+		public void AndIFurnishthedetailsfortheappointment(String Type,String Method,String Pateint,String Provider) 
 		{
 
 		}
 
-		[And(@"Clicks on button Make Reservation button and verify the message")]
-		public void AndClicksonbuttonMakeReservationbuttonandverifythemessage() 
+		[And(@"I add the other details to the form")]
+		public void AndIaddtheotherdetailstotheform() 
 		{
 
 		}
 
-		[And(@"I logout from Web Gantt application")]
-		public void AndIlogoutfromWebGanttapplication() 
+		[And(@"I save the appointment device")]
+		public void AndIsavetheappointmentdevice() 
+		{
+
+		}
+
+		[And(@"I procceed to delete the appointment")]
+		public void AndIprocceedtodeletetheappointment() 
+		{
+
+		}
+
+		[And(@"I logout from the application")]
+		public void AndIlogoutfromtheapplication() 
+		{
+
+		}
+
+		[And(@"I verify the logout message")]
+		public void AndIverifythelogoutmessage() 
 		{
 
 		}

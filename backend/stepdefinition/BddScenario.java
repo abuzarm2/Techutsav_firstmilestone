@@ -1,17 +1,17 @@
 public class seatbooking  {
 
-	@Given("^I launch Seat Booking Application(.*)$")
-	public void I_launch_Seat_Booking_Application(String URL) throws InterruptedException {
+	@Given("^I launch Seat Booking Application$")
+	public void I_launch_Seat_Booking_Application() throws InterruptedException {
 
 	}
-	
-	@When("^I Login to Seat Booking Application(.*)(.*)$")
-	public void I_Login_to_Seat_Booking_Application(String Uname,String Password) throws InterruptedException {
+
+	@When("^I Login to Seat Booking Application$")
+	public void I_Login_to_Seat_Booking_Application() throws InterruptedException {
 
 	}
-	
-	@And("^I land to SeatBooking Application Home Page$")
-	public void I_land_to_SeatBooking_Application_Home_Page() throws InterruptedException {
+
+	@And("^I land to Seat Booking Application Home Page$")
+	public void I_land_to_Seat_Booking_Application_Home_Page() throws InterruptedException {
 
 	}
 
@@ -20,8 +20,8 @@ public class seatbooking  {
 
 	}
 
-	@And("^Funrnish the information(.*)(.*)(.*)(.*)$")
-	public void Funrnish_the_information(String Model,String Storage,String Ram,String Processor) throws InterruptedException {
+	@And("^I Furnish the details for the appointment(.*)(.*)(.*)(.*)$")
+	public void I_Furnish_the_details_for_the_appointment(String model,String storage,String Ram,String processor) throws InterruptedException {
 
 	}
 	
